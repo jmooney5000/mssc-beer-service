@@ -1,8 +1,10 @@
 package guru.springframework.msscbeerservice.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import guru.springframework.msscbeerservice.services.BeerService;
-import guru.springframework.msscbeerservice.web.model.BeerDto;
+import guru.springframework.msscbeerservice.services.v2.BeerServiceV2;
+import guru.springframework.msscbeerservice.web.controller.v2.BeerControllerV2;
+import guru.springframework.msscbeerservice.web.model.v2.BeerDtoV2;
+import guru.springframework.msscbeerservice.web.model.v2.BeerStyleEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,11 +25,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(BeerController.class)
+@WebMvcTest(BeerControllerV2.class)
 public class BeerControllerTest {
 
     @MockBean
-    BeerService beerService;
+    BeerServiceV2 beerService;
 
     @Autowired
     MockMvc mockMvc;
@@ -35,13 +37,13 @@ public class BeerControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    BeerDto validBeer;
+    BeerDtoV2 validBeer;
 
     @Before
     public void setUp() {
-        validBeer = BeerDto.builder().id(UUID.randomUUID())
-                .beerName("Beer1")
-                .beerStyle("PALE_ALE")
+        validBeer = BeerDtoV2.builder().id(UUID.randomUUID())
+                .beerName("Lucky Lindy")
+                .beerStyle("")
                 .upc(123456789012L)
                 .build();
     }
@@ -60,9 +62,9 @@ public class BeerControllerTest {
     @Test
     public void handlePost() throws Exception {
         //given
-        BeerDto beerDto = validBeer;
+        BeerDtoV2 beerDto = validBeer;
         beerDto.setId(null);
-        BeerDto savedDto = BeerDto.builder().id(UUID.randomUUID()).beerName("New Beer").build();
+        BeerDtoV2 savedDto = BeerDtoV2.builder().id(UUID.randomUUID()).beerName("New Beer").build();
         String beerDtoJson = objectMapper.writeValueAsString(beerDto);
 
         given(beerService.saveNewBeer(any())).willReturn(savedDto);
@@ -77,11 +79,12 @@ public class BeerControllerTest {
     @Test
     public void handleUpdate() throws Exception {
         //given
-        BeerDto beerDto = validBeer;
+        BeerDtoV2 beerDto = validBeer;
+        beerDto.setId(null);
         String beerDtoJson = objectMapper.writeValueAsString(beerDto);
 
         //when
-        mockMvc.perform(put("/api/v1/beer/" + validBeer.getId())
+        mockMvc.perform(put("/api/v2/beer/" + UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(beerDtoJson))
                 .andExpect(status().isNoContent());
