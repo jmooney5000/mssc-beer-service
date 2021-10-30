@@ -2,6 +2,7 @@ package guru.springframework.msscbeerservice.bootstrap;
 
 import guru.springframework.msscbeerservice.domain.Beer;
 import guru.springframework.msscbeerservice.repositories.BeerRepository;
+import guru.springframework.msscbeerservice.web.model.v2.BeerStyleEnum;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +28,7 @@ public class BeerLoader implements CommandLineRunner {
 
             beerRepository.save(Beer.builder()
                     .beerName("Mango Bobs")
-                    .beerStyle("IPA")
+                    .beerStyle(BeerStyleEnum.ALE)
                     .quantityToBrew(200)
                     .minOnHand(12)
                     .upc(3370100000001L)
@@ -36,7 +37,7 @@ public class BeerLoader implements CommandLineRunner {
 
             beerRepository.save(Beer.builder()
                     .beerName("Galaxy Cat")
-                    .beerStyle("PALE ALE")
+                    .beerStyle(BeerStyleEnum.ALE)
                     .quantityToBrew(200)
                     .minOnHand(12)
                     .upc(3370100000002L)
