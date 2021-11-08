@@ -1,6 +1,7 @@
 package guru.springframework.msscbeerservice.services.v2;
 
 import guru.springframework.msscbeerservice.web.model.v2.BeerDtoV2;
+import guru.springframework.msscbeerservice.web.model.v2.BeerStyleEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -12,12 +13,15 @@ import java.util.UUID;
 public class BeerServiceV2Impl implements BeerServiceV2 {
     @Override
     public BeerDtoV2 getBeerById(UUID beerId) {
-        return null;
+        return BeerDtoV2.builder().id(UUID.randomUUID())
+                .beerName("Galaxy Cat")
+                .beerStyle(BeerStyleEnum.ALE)
+                .build();
     }
 
     @Override
     public BeerDtoV2 saveNewBeer(BeerDtoV2 beerDto) {
-        return null;
+        return BeerDtoV2.builder().id(UUID.randomUUID()).build();
     }
 
     @Override
