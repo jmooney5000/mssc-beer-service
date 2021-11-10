@@ -1,37 +1,46 @@
 package guru.springframework.msscbeerservice.services;
 
+import guru.springframework.msscbeerservice.domain.Beer;
+import guru.springframework.msscbeerservice.repositories.BeerRepository;
+import guru.springframework.msscbeerservice.web.controller.NewNotFoundException;
+import guru.springframework.msscbeerservice.web.mappers.BeerMapper;
 import guru.springframework.msscbeerservice.web.model.BeerDto;
-import lombok.extern.slf4j.Slf4j;
+import javassist.NotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-/**
- * Created by jt on 2019-04-20.
- */
-@Slf4j
+@RequiredArgsConstructor
 @Service
 public class BeerServiceImpl implements BeerService {
+    private final BeerRepository beerRepository;
+    private final BeerMapper beerMapper;
+
     @Override
-    public BeerDto getBeerById(UUID beerId) {
-        return BeerDto.builder().id(UUID.randomUUID())
-                .beerName("Galaxy Cat")
-                .beerStyle("Pale Ale")
-                .build();
+    public BeerDto getById(UUID beerId) {
+        return beerMapper.beerToBeerDto(
+                beerRepository.findById(beerId).orElseThrow(NewNotFoundException::new)
+        );
     }
 
     @Override
     public BeerDto saveNewBeer(BeerDto beerDto) {
-        return BeerDto.builder().id(UUID.randomUUID()).build();
+        return beerMapper.beerToBeerDto(
+                beerRepository.save(beerMapper.beerDtoToBeer(beerDto))
+        );
     }
 
     @Override
-    public void updateBeer(UUID beerId, BeerDto beerDto) {
+    public BeerDto updateBeer(UUID beerId, BeerDto beerDto) {
+        Beer beer = beerRepository.findById(beerId).orElseThrow(NewNotFoundException::new);
 
+        beer.setBeerName(beerDto.getBeerName());
+        beer.setBeerStyle(beerDto.getBeerStyle().name());
+        beer.setPrice(beerDto.getPrice());
+        beer.setUpc(beerDto.getUpc());
+
+        return beerMapper.beerToBeerDto(beerRepository.save(beer));
     }
 
-    @Override
-    public void deleteById(UUID beerId) {
-        log.debug("Deleting a beer...");
-    }
 }

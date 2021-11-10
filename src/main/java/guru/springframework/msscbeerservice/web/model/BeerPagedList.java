@@ -3,17 +3,16 @@ package guru.springframework.msscbeerservice.web.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
-import guru.springframework.msscbeerservice.web.model.v2.BeerDtoV2;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public class BeerPagedList extends PageImpl<BeerDtoV2> {
+public class BeerPagedList extends PageImpl<BeerDto> {
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public BeerPagedList(@JsonProperty("content") List<BeerDtoV2> content,
+    public BeerPagedList(@JsonProperty("content") List<BeerDto> content,
                          @JsonProperty("number") int number,
                          @JsonProperty("size") int size,
                          @JsonProperty("totalElements") Long totalElements,
@@ -27,11 +26,11 @@ public class BeerPagedList extends PageImpl<BeerDtoV2> {
         super(content, PageRequest.of(number, size), totalElements);
     }
 
-    public BeerPagedList(List<BeerDtoV2> content, Pageable pageable, long total) {
+    public BeerPagedList(List<BeerDto> content, Pageable pageable, long total) {
         super(content, pageable, total);
     }
 
-    public BeerPagedList(List<BeerDtoV2> content) {
+    public BeerPagedList(List<BeerDto> content) {
         super(content);
     }
 }

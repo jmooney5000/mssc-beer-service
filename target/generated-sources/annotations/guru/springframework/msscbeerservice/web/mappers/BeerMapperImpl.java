@@ -2,8 +2,8 @@ package guru.springframework.msscbeerservice.web.mappers;
 
 import guru.springframework.msscbeerservice.domain.Beer;
 import guru.springframework.msscbeerservice.domain.Beer.BeerBuilder;
-import guru.springframework.msscbeerservice.web.model.v2.BeerDtoV2;
-import guru.springframework.msscbeerservice.web.model.v2.BeerDtoV2.BeerDtoV2Builder;
+import guru.springframework.msscbeerservice.web.model.BeerDto;
+import guru.springframework.msscbeerservice.web.model.BeerDto.BeerDtoV2Builder;
 import javax.annotation.processing.Generated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,12 +20,12 @@ public class BeerMapperImpl implements BeerMapper {
     private DateMapper dateMapper;
 
     @Override
-    public BeerDtoV2 beerToBeerDto(Beer beer) {
+    public BeerDto beerToBeerDto(Beer beer) {
         if ( beer == null ) {
             return null;
         }
 
-        BeerDtoV2Builder beerDtoV2 = BeerDtoV2.builder();
+        BeerDtoV2Builder beerDtoV2 = BeerDto.builder();
 
         beerDtoV2.id( beer.getId() );
         if ( beer.getVersion() != null ) {
@@ -42,7 +42,7 @@ public class BeerMapperImpl implements BeerMapper {
     }
 
     @Override
-    public Beer beerDtoToBeer(BeerDtoV2 dto) {
+    public Beer beerDtoToBeer(BeerDto dto) {
         if ( dto == null ) {
             return null;
         }
