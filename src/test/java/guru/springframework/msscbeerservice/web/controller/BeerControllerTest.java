@@ -1,8 +1,10 @@
 package guru.springframework.msscbeerservice.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import guru.springframework.msscbeerservice.bootstrap.BeerLoader;
 import guru.springframework.msscbeerservice.domain.Beer;
 import guru.springframework.msscbeerservice.repositories.BeerRepository;
+import guru.springframework.msscbeerservice.services.BeerService;
 import guru.springframework.msscbeerservice.web.model.BeerDto;
 import guru.springframework.msscbeerservice.web.model.BeerStyleEnum;
 import org.junit.jupiter.api.Test;
@@ -47,18 +49,18 @@ public class BeerControllerTest {
     ObjectMapper objectMapper;
 
     @MockBean
-    BeerRepository beerRepository;
+    BeerService beerService;
 
 
     @Test
     public void getBeerById() throws Exception {
-        given(beerRepository.findById(any())).willReturn(Optional.of(Beer.builder().build()));
+        // todo .... given(beerRepository.findById(any())).willReturn(Optional.of(Beer.builder().build()));
 
-        mockMvc.perform(get("/api/v2/beer/{beerId}", UUID.randomUUID().toString())
+        mockMvc.perform(get("/api/v1/beer/{beerId}", UUID.randomUUID().toString())
                 .param("iscold", "yes")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(document("v2/beer",
+                .andDo(document("v1/beer",
                                 pathParameters(
                                         parameterWithName("beerId").description("UUID of desired beer to get.")
                                 ),
@@ -81,16 +83,16 @@ public class BeerControllerTest {
 
     @Test
     public void saveNewBeer() throws Exception {
-        BeerDto beerDto = getValidBeerDtoV2();
+        BeerDto beerDto = getValidBeerDto();
         String beerDtoJson = objectMapper.writeValueAsString(beerDto);
 
         ConstrainedFields fields = new ConstrainedFields(BeerDto.class);
 
-        mockMvc.perform(post("/api/v2/beer/")
+        mockMvc.perform(post("/api/v1/beer/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(beerDtoJson))
                 .andExpect(status().isCreated())
-                .andDo(document("v2/beer",
+                .andDo(document("v1/beer",
                                 requestFields(
                                         fields.withPath("id").ignored(),
                                         fields.withPath("version").ignored(),
@@ -109,21 +111,23 @@ public class BeerControllerTest {
 
     @Test
     public void updateBeerById() throws Exception {
-        BeerDto beerDto = getValidBeerDtoV2();
+        // todo finish this ....given(beerS)
+
+        BeerDto beerDto = getValidBeerDto();
         String beerDtoJson = objectMapper.writeValueAsString(beerDto);
 
-        mockMvc.perform(put("/api/v2/beer/" + UUID.randomUUID())
+        mockMvc.perform(put("/api/v1/beer/" + UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(beerDtoJson))
                 .andExpect(status().isNoContent());
     }
 
-    BeerDto getValidBeerDtoV2(){
+    BeerDto getValidBeerDto(){
         return BeerDto.builder()
                 .beerName("My Beer")
                 .beerStyle(BeerStyleEnum.ALE)
                 .price(new BigDecimal("2.99"))
-                .upc(12121232434324L)
+                .upc(BeerLoader.BEER_1_UPC)
                 .build();
     }
 
